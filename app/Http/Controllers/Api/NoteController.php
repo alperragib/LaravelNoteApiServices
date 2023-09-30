@@ -24,11 +24,11 @@ class NoteController extends Controller
         $filterItems = $filter->transform($request);
 
         if (count($filterItems) == 0) {
-            $companies = Note::orderBy('updated_at', 'desc')->paginate($size);
-            return new NoteCollection($companies->appends($request->query()));
+            $notes = Note::orderBy('updated_at', 'desc')->paginate($size);
+            return new NoteCollection($notes->appends($request->query()));
         } else {
-            $companies = Note::where($filterItems)->orderBy('updated_at', 'desc')->paginate($size);
-            return new NoteCollection($companies->appends($request->query()));
+            $notes = Note::where($filterItems)->orderBy('updated_at', 'desc')->paginate($size);
+            return new NoteCollection($notes->appends($request->query()));
         }
 
     }
@@ -63,5 +63,13 @@ class NoteController extends Controller
     public function destroy(string $id)
     {
         return Note::destroy($id);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function search(string $searchKey)
+    {
+        return new NoteCollection(Note::where('title', 'like', "%{$searchKey}%")->orWhere('content', 'like', "%{$searchKey}%")->orderBy('updated_at', 'desc')->paginate());
     }
 }

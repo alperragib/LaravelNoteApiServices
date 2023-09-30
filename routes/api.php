@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::apiResource('notes', NoteController::class);
 
+Route::get('notes/search/{searchKey}', [NoteController::class, 'search']);
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
